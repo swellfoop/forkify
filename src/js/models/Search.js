@@ -14,7 +14,7 @@ export default class Search {
         }
         catch (error) {
             console.log(error);
-            alert(cfg.errorMessage);
+            alert(cfg.errorMessage());
         }
     }
 }

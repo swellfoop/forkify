@@ -1,5 +1,6 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
+import * as cfg from './config';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 import { elements, elementStrings, renderLoader, clearLoader } from './views/base';
@@ -40,7 +41,7 @@ const controlSearch = async () => {
         }
         catch (error) {
             console.log(error);
-            alert('Something went wrong with the search : (')
+            alert(cfg.errorMessage('search'));
             clearLoader();
         }  
     }
@@ -95,9 +96,21 @@ const controlRecipe = async () => {
         }
         catch (error) {
             console.log(error);
-            alert('Error processing recipe');
+            alert(cfg.errorMessage('recipe'));
         }
     }
 }
 
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
+
+// Handling recipe button clicks
+elements.recipe.addEventListener('click', el => {
+    if (el.target.matches('.btn-decrease, .btn-decrease *')) {
+        if (state.recipe.servings > 1) {
+            state.recipe.updateServings('dec');
+        };
+    } else if (el.target.matches('.btn-increase, .btn-increase *')) {
+        state.recipe.updateServings('inc');
+    };
+    recipeView.updateServingsIngredients(state.recipe);
+})
