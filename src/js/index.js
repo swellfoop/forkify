@@ -1,6 +1,7 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
 import * as searchView from './views/searchView';
+import * as recipeView from './views/recipeView';
 import { elements, elementStrings, renderLoader, clearLoader } from './views/base';
 
 /*
@@ -73,13 +74,13 @@ const controlRecipe = async () => {
         state.recipe = new Recipe(id);
         
         try {
-            // Get recipe data
+            // Get recipe data and parse ingredients
             await state.recipe.getRecipe();
+            state.recipe.parseIngredients();
             
             // Calculate time and servings
             state.recipe.calcTime();
             state.recipe.calcServings();
-            state.recipe.parseIngredients();
 
             // Render recipe
             console.log(state.recipe);

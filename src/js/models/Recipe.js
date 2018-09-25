@@ -38,8 +38,8 @@ export default class Recipe {
             ['tbsp', ['tablespoons', 'tablespoon']],
             ['tsp', ['teaspoons', 'teaspoon']],
             ['oz', ['ounces', 'ounce']],
-            ['lb', ['pounds', 'pound']],
-            ['cup', ['cups', 'cup']]
+            ['lb', ['pounds', 'pound', 'lbs']],
+            ['cup', ['cups']]
         ];
 
         const newIngredients = this.ingredients.map(el => {
@@ -51,8 +51,8 @@ export default class Recipe {
                 });
             });
 
-            // Remove anything in parentheses
-            ingredient = ingredient.replace(/ *\([^)]*\) */g, ' ');
+            // Remove anything in parentheses and trim extra spaces
+            ingredient = ingredient.replace(/ *\([^)]*\) */g, ' ').trim();
 
             // Parse ingredients into count, unit, and ingredient
             const ingredientArray = ingredient.split(' ');
@@ -63,21 +63,31 @@ export default class Recipe {
             let ingredientObject;
             if (unitIndex > -1) {
                 // There is a unit
+                const countArray = ingredientArray.slice(0, unitIndex); // eg. 4 1/2 cups => [4, 1/2]
+                let count;
+                if (countArray.length === 1) {
+                    count = eval(ingredientArray[0].replace('-', '+'));
+                } else {
+                    count = eval(ingredientArray.slice(0, unitIndex).join('+'));    // eval('4+1/2') = 4.5
+                };
+                ingredientObject = {
+                    count,
+                    unit: ingredientArray[unitIndex],
+                    ingredient: ingredientArray.slice(unitIndex + 1).join(' ')
+                }
             } else if (parseInt(ingredientArray[0], 10)) {
                 // There is no unit, but the first element is a number
                 ingredientObject = {
                     count: parseInt(ingredientArray[0], 10),
                     unit: '',
-                    ingredient: ingredientArray.slice(1).join(' '),
-                    unitIndex
+                    ingredient: ingredientArray.slice(1).join(' ')
                 }
             } else if (unitIndex === -1) {
                 // There is no unit and no number in the first position
                 ingredientObject = {
                     count: 1,
                     unit: '',
-                    ingredient,
-                    unitIndex
+                    ingredient
                 }
             };
 
