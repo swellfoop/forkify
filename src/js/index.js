@@ -1,8 +1,10 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
+import List from './models/List';
 import * as cfg from './config';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
+import * as listView from './views/listView';
 import { elements, elementStrings, renderLoader, clearLoader } from './views/base';
 
 /*
@@ -103,6 +105,45 @@ const controlRecipe = async () => {
 
 ['hashchange', 'load'].forEach(event => window.addEventListener(event, controlRecipe));
 
+/**
+    LIST CONTROLLER
+**/
+
+const controlList = () => {
+    // Create a new list if one does not already exist
+    if (!state.list) {
+        state.list = new List();
+    }
+
+    // Add each ingredient to the list and update DOM
+    state.recipe.ingredients.forEach(el => {
+        const item = state.list.addItem(el.count, el.unit, el.ingredient);
+        listView.renderItem(item);
+    });
+
+}
+
+// Handling delete and update list item events
+elements.shoppingList.addEventListener('click', el => {
+    const id = el.target.closest('.shopping__item').dataset.itemid;
+
+    // handle delete button
+    if (el.target.matches('.shopping__delete, .shopping__delete *')) {
+        // Delete from state and DOM
+        state.list.deleteItem(id);
+        listView.deleteItem(id);
+    } else if (el.target.matches('.shopping__count-value')) {
+        // Update count
+        let val = parseFloat(el.target.value);
+        const step = parseFloat(el.target.step);
+        if (val < step) {
+            el.target.value = step;
+            val = step;
+        };
+        state.list.updateCount(id, val);
+    };
+});
+
 // Handling recipe button clicks
 elements.recipe.addEventListener('click', el => {
     if (el.target.matches('.btn-decrease, .btn-decrease *')) {
@@ -111,6 +152,8 @@ elements.recipe.addEventListener('click', el => {
         };
     } else if (el.target.matches('.btn-increase, .btn-increase *')) {
         state.recipe.updateServings('inc');
+    } else if (el.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
+        controlList();
     };
     recipeView.updateServingsIngredients(state.recipe);
 })
