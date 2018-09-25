@@ -11,6 +11,17 @@ export const clearResults = () => {
     elements.searchResultPages.innerHTML = '';
 }
 
+export const highlightSelected = id => {
+
+    const resultsArray = Array.from(document.querySelectorAll('.results__link--active'));
+    resultsArray.forEach(el => {
+        el.classList.remove('results__link--active');
+    })
+
+    document.querySelector(`a[href="#${id}"]`).classList.add('results__link--active')
+    
+};
+
 const truncateString = (title, limit = 17) => {
     const newTitle = [];
     if (title.length > limit) {

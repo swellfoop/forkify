@@ -39,7 +39,9 @@ export default class Recipe {
             ['tsp', ['teaspoons', 'teaspoon']],
             ['oz', ['ounces', 'ounce']],
             ['lb', ['pounds', 'pound', 'lbs']],
-            ['cup', ['cups']]
+            ['cup', ['cups']],
+            ['kg', ['kilograms', 'kilogram']],
+            ['g', ['grams', 'gram']]            
         ];
 
         const newIngredients = this.ingredients.map(el => {
@@ -90,7 +92,6 @@ export default class Recipe {
                     ingredient
                 }
             };
-
             return ingredientObject;
         });
 
