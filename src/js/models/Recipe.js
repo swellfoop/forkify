@@ -11,7 +11,7 @@ export default class Recipe {
             const res = await axios(`${cfg.apiUrl}get?key=${cfg.key}&rId=${this.id}`);
             this.title = res.data.recipe.title;
             this.author = res.data.recipe.publisher;
-            this.image = res.data.recipe.image_url;
+            this.img = res.data.recipe.image_url;
             this.url = res.data.recipe.source_url;
             this.ingredients = res.data.recipe.ingredients;
         }

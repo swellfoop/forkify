@@ -11,18 +11,18 @@ export const clearResults = () => {
     elements.searchResultPages.innerHTML = '';
 }
 
-export const highlightSelected = id => {
+export const highlightSelected = (id, className) => {
 
-    const resultsArray = Array.from(document.querySelectorAll('.results__link--active'));
+    const resultsArray = Array.from(document.querySelectorAll(`.${className}--active`));
     resultsArray.forEach(el => {
-        el.classList.remove('results__link--active');
+        el.classList.remove(`${className}--active`);
     })
 
-    document.querySelector(`a[href="#${id}"]`).classList.add('results__link--active')
-    
+    const resultsLink = document.querySelector(`.${className}[href*="#${id}"]`);
+    if (resultsLink) resultsLink.classList.add(`${className}--active`);    
 };
 
-const truncateString = (title, limit = 17) => {
+export const truncateString = (title, limit = 17) => {
     const newTitle = [];
     if (title.length > limit) {
         title.split(' ').reduce((acc, cur) => {
@@ -35,7 +35,7 @@ const truncateString = (title, limit = 17) => {
         return `${newTitle.join(' ')}&hellip;`;
     };
     return title;
-}
+};
 
 const renderRecipe = recipe => {
     const markup = `

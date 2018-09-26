@@ -1,10 +1,12 @@
 import Search from './models/Search';
 import Recipe from './models/Recipe';
 import List from './models/List';
+import Likes from './models/Likes';
 import * as cfg from './config';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 import * as listView from './views/listView';
+import * as likesView from './views/likesView.js';  // Accidentally initially made this file as a .txt and now JavaScript won't recognise it without the .js suffix
 import { elements, elementStrings, renderLoader, clearLoader } from './views/base';
 
 /*
@@ -77,7 +79,8 @@ const controlRecipe = async () => {
 
         // Highlight selected search item
         if (state.search) {
-            searchView.highlightSelected(id);
+            searchView.highlightSelected(id, 'results__link');
+            searchView.highlightSelected(id, 'likes__link');
         };
 
         // Create new recipe object
@@ -94,7 +97,10 @@ const controlRecipe = async () => {
 
             // Render recipe
             clearLoader();
-            recipeView.renderRecipe(state.recipe);
+            recipeView.renderRecipe(
+                state.recipe,
+                state.likes.isLiked(id)
+            );
         }
         catch (error) {
             console.log(error);
@@ -144,16 +150,66 @@ elements.shoppingList.addEventListener('click', el => {
     };
 });
 
+/**
+    LIKE CONTROLLER
+**/
+// TESTING -------------------------//
+state.likes = new Likes();    //
+likesView.toggleLikesMenu(0); //
+// --------------------------------//
+const controlLike = () => {
+    if (!state.likes) {
+        state.likes = new Likes();
+    };
+
+    const currentID = state.recipe.id;
+    
+    if (!state.likes.isLiked(currentID)) {
+        // User has not liked current recipe
+        // Add like to data
+        const newLike = state.likes.addLike(
+            currentID,
+            state.recipe.title,
+            state.recipe.author,
+            state.recipe.img
+        );
+        // Toggle like button
+        likesView.toggleLikeButton(true);
+
+        // Add like to DOM
+        likesView.renderLike(newLike);
+
+        // Highlight as current view
+        searchView.highlightSelected(currentID, 'likes__link');
+    } else {
+        // User has liked current recipe
+        // Remove like from data
+        state.likes.deleteLike(currentID);
+        // Toggle like button
+        likesView.toggleLikeButton(false);
+
+        // Remove like from DOM
+        likesView.deleteLike(currentID);
+    };
+    likesView.toggleLikesMenu(state.likes.getNumberOfLikes());
+};
+
 // Handling recipe button clicks
 elements.recipe.addEventListener('click', el => {
     if (el.target.matches('.btn-decrease, .btn-decrease *')) {
+        // Decrease button
         if (state.recipe.servings > 1) {
             state.recipe.updateServings('dec');
         };
     } else if (el.target.matches('.btn-increase, .btn-increase *')) {
+        // Increase button
         state.recipe.updateServings('inc');
     } else if (el.target.matches('.recipe__btn--add, .recipe__btn--add *')) {
+        // Add ingredients to shopping list
         controlList();
+    } else if (el.target.matches('.recipe__love, .recipe__love *')) {
+        // Add to / remove from like list
+        controlLike();
     };
     recipeView.updateServingsIngredients(state.recipe);
 })
