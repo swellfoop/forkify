@@ -5,6 +5,7 @@ export const elements = {
     searchResultList: document.querySelector('.results__list'),
     searchResultPages: document.querySelector('.results__pages'),
     recipe: document.querySelector('.recipe'),
+    shoppingSection: document.querySelector('.shopping'),
     shoppingList: document.querySelector('.shopping__list'),
     likesMenu: document.querySelector('.likes__field'),
     likesList: document.querySelector('.likes__list')
@@ -31,4 +32,15 @@ export const clearLoader = () => {
     if (loader) {
         loader.parentElement.removeChild(loader);
     }
+};
+
+export const errorMessage = msg => {
+    if (msg === 'key') {
+        return 'You have likely exceeded your API calls for the day. Try changing the API key in config.js.'
+    } else if (msg === 'search') {
+        return 'An error occured during the search.'
+    } else if (msg === 'recipe') {
+        return 'Could not process this recipe :c'
+    };
+    return 'Oops! Something went wrong! D:';
 };

@@ -2,12 +2,11 @@ import Search from './models/Search';
 import Recipe from './models/Recipe';
 import List from './models/List';
 import Likes from './models/Likes';
-import * as cfg from './config';
 import * as searchView from './views/searchView';
 import * as recipeView from './views/recipeView';
 import * as listView from './views/listView';
 import * as likesView from './views/likesView.js';  // Accidentally initially made this file as a .txt and now JavaScript won't recognise it without the .js suffix
-import { elements, elementStrings, renderLoader, clearLoader } from './views/base';
+import { elements, elementStrings, renderLoader, clearLoader, errorMessage } from './views/base';
 
 /*
 Global state of the App:
@@ -45,7 +44,7 @@ const controlSearch = async () => {
         }
         catch (error) {
             console.log(error);
-            alert(cfg.errorMessage('search'));
+            alert(errorMessage('search'));
             clearLoader();
         }  
     }
@@ -104,7 +103,7 @@ const controlRecipe = async () => {
         }
         catch (error) {
             console.log(error);
-            alert(cfg.errorMessage('recipe'));
+            alert(errorMessage('recipe'));
         }
     }
 }
@@ -125,6 +124,7 @@ const controlList = () => {
     state.recipe.ingredients.forEach(el => {
         const item = state.list.addItem(el.count, el.unit, el.ingredient);
         listView.renderItem(item);
+        listView.renderDeleteAllButton();
     });
 
 }
@@ -138,6 +138,7 @@ elements.shoppingList.addEventListener('click', el => {
         // Delete from state and DOM
         state.list.deleteItem(id);
         listView.deleteItem(id);
+        if (state.list.items.length < 1) listView.deleteDeleteAllButton();
     } else if (el.target.matches('.shopping__count-value')) {
         // Update count
         let val = parseFloat(el.target.value);
@@ -147,6 +148,14 @@ elements.shoppingList.addEventListener('click', el => {
             val = step;
         };
         state.list.updateCount(id, val);
+    };
+});
+
+// Handling delete all event
+elements.shoppingSection.addEventListener('click', el => {
+    if (el.target.matches('.shopping__delete-all, .shopping__delete-all *')) {
+        state.list.deleteAll();
+        listView.deleteAll();
     };
 });
 

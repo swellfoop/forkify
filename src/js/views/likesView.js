@@ -8,8 +8,12 @@ export const toggleLikeButton = isLiked => {
 };
 
 export const toggleLikesMenu = numberOfLikes => {
-    // Used opacity here instead of visibility to allow for a CSS fade effect
-    elements.likesMenu.style.opacity = numberOfLikes > 0 ? 1 : 0;
+    // Used custom CSS classes to allow for a fade effect rather than the menu popping in and out
+    if (numberOfLikes > 0) {
+        elements.likesMenu.classList.add('likes__field--active');
+    } else {
+        elements.likesMenu.classList.remove('likes__field--active');
+    };
 };
 
 export const renderLike = like => {

@@ -7,14 +7,4 @@ const keys = [
 ]
 
 export const apiUrl = 'https://www.food2fork.com/api/';
-export const key = keys[3];
-export const errorMessage = msg => {
-    if (msg === 'key') {
-        return 'You have likely exceeded your API calls for the day. Try changing the API key in config.js.'
-    } else if (msg === 'search') {
-        return 'An error occured during the search.'
-    } else if (msg === 'recipe') {
-        return 'Could not process this recipe :c'
-    };
-    return 'Oops! Something went wrong! D:';
-};
+export const key = keys[0];

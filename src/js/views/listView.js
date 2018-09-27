@@ -22,3 +22,26 @@ export const deleteItem = id => {
     const item = document.querySelector(`[data-itemid="${id}"]`);
     if (item) item.parentElement.removeChild(item);
 };
+
+export const deleteAll = () => {
+    elements.shoppingList.innerHTML = '';
+    deleteDeleteAllButton();
+};
+
+export const renderDeleteAllButton = () => {
+    const markup = `
+        <button class="shopping__delete-all btn-small">
+            <svg>
+                <use href="img/icons.svg#icon-circle-with-cross"></use>
+            </svg>
+            Delete all
+        </button>
+    `;
+    const exists = document.querySelector('.shopping__delete-all');
+    if (!exists) elements.shoppingList.insertAdjacentHTML('afterend', markup);
+}
+
+export const deleteDeleteAllButton = () => {
+    const item = document.querySelector('.shopping__delete-all');
+    if (item) item.parentElement.removeChild(item);
+}

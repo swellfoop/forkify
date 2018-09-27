@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { errorMessage } from '../views/base';
 import * as cfg from '../config';
 
 export default class Recipe {
@@ -17,7 +18,7 @@ export default class Recipe {
         }
         catch (error) {
             console.log(error);
-            alert(cfg.errorMessage('key'));
+            alert(errorMessage('key'));
         }
     }
 

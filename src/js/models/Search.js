@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { errorMessage } from '../views/base';
 import * as cfg from '../config';
 
 export default class Search {
@@ -14,7 +15,7 @@ export default class Search {
         }
         catch (error) {
             console.log(error);
-            alert(cfg.errorMessage());
+            alert(errorMessage());
         }
     }
 }
