@@ -7,4 +7,4 @@ const keys = [
 ]
 
 export const apiUrl = 'https://www.food2fork.com/api/';
-export const key = keys[1];
+export const key = keys[2];

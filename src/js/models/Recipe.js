@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { errorMessage } from '../views/base';
+import { errorMessage, secure } from '../views/base';
 import * as cfg from '../config';
 
 export default class Recipe {
@@ -12,14 +12,14 @@ export default class Recipe {
             const res = await axios(`${cfg.apiUrl}get?key=${cfg.key}&rId=${this.id}`);
             this.title = res.data.recipe.title;
             this.author = res.data.recipe.publisher;
-            this.img = res.data.recipe.image_url;
-            this.url = res.data.recipe.source_url;
+            this.img = secure(res.data.recipe.image_url);
+            this.url = secure(res.data.recipe.source_url);
             this.ingredients = res.data.recipe.ingredients;
         }
         catch (error) {
             console.log(error);
             alert(errorMessage('key'));
-        }
+        };
     }
 
     calcTime() {

@@ -54,3 +54,7 @@ export const readStorage = key => {
     // If storage has a value then re-store data from localStorage
     if (storage) return storage;
 };
+
+export const secure = url => {
+    return url.replace('http://', 'https://');
+}
