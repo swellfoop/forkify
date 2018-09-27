@@ -33,7 +33,11 @@ export default class Likes {
     };
 
     getNumberOfLikes() {
-        return this.likes.length;
+        if (this.likes.length) {
+            return this.likes.length;
+        } else {
+            return 0;
+        };
     };
 
     persistData() {
