@@ -44,3 +44,13 @@ export const errorMessage = msg => {
     };
     return 'Oops! Something went wrong! D:';
 };
+
+export const persistData = (key, obj) => {
+    localStorage.setItem(key, JSON.stringify(obj));
+};
+
+export const readStorage = key => {
+    const storage = JSON.parse(localStorage.getItem(key));
+    // If storage has a value then re-store data from localStorage
+    if (storage) return storage;
+};

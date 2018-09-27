@@ -199,22 +199,6 @@ const controlLike = () => {
     likesView.toggleLikesMenu(state.likes.getNumberOfLikes());
 };
 
-// Resore liked recipes on page load
-window.addEventListener('load', () => {
-    state.likes = new Likes();
-
-    // Restore any previous likes to the current session
-    state.likes.readStorage();
-
-    // Toggle menu button
-    likesView.toggleLikesMenu(state.likes.getNumberOfLikes());
-
-    // Render the existing likes
-    state.likes.likes.forEach(like => {
-        likesView.renderLike(like);
-    });
-})
-
 // Handling recipe button clicks
 elements.recipe.addEventListener('click', el => {
     if (el.target.matches('.btn-decrease, .btn-decrease *')) {
@@ -233,4 +217,38 @@ elements.recipe.addEventListener('click', el => {
         controlLike();
     };
     recipeView.updateServingsIngredients(state.recipe);
+})
+
+// -------------------------
+//  PAGE LOAD EVENT
+// -------------------------
+// Resore liked recipes and shopping list on page load
+window.addEventListener('load', () => {
+    // LIKED RECIPES ----------------------------------
+    state.likes = new Likes();
+    
+    // Restore any previous data to the current session
+    state.likes.readStorage();
+
+    // Toggle menu button
+    likesView.toggleLikesMenu(state.likes.getNumberOfLikes());
+
+    // Render the existing likes
+    state.likes.likes.forEach(like => {
+        likesView.renderLike(like);
+    });
+    // ------------------------------------------------
+
+    // SHOPPING LIST ----------------------------------
+    state.list = new List();
+    state.list.readStorage();
+
+    // Render shopping list
+    if (state.list.items.length > 0) {
+        state.list.items.forEach(el => {
+            listView.renderItem(el);
+            listView.renderDeleteAllButton();
+        });
+    }
+    // ------------------------------------------------
 })

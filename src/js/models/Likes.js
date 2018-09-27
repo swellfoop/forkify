@@ -1,3 +1,5 @@
+import { persistData as write, readStorage as read } from '../views/base';
+
 export default class Likes {
     constructor() {
         this.likes = [];
@@ -35,12 +37,10 @@ export default class Likes {
     };
 
     persistData() {
-        localStorage.setItem('likes', JSON.stringify(this.likes));
+        write('likes', this.likes);
     };
 
     readStorage() {
-        const storage = JSON.parse(localStorage.getItem('likes'));
-        // If storage has a value then re-store likes from loaclStorage
-        if (storage) this.likes = storage;
+        this.likes = read('likes');
     }
 }
